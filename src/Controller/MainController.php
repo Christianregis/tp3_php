@@ -11,7 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-
+    private const COMPETENCES = [
+        'web' => 'Développement web',
+        'java' => 'Java',
+        'devops' => 'DevOps',
+        'cyber' => 'Cybersécurité',
+        'data' => 'Data / IA',
+    ];
 
     #[Route("/bonjour/{nom}", name: 'bonjour', defaults: ['nom' => 'Inconnu'])]
     public function indexbis(string $nom)
@@ -71,6 +77,7 @@ class MainController extends AbstractController
         }
         return $this->render('tuteur/show.html.twig', [
             "tuteur" => $tuteurProvider->find($id),
+            "competences" => $this::COMPETENCES,
         ]);
     }
 }

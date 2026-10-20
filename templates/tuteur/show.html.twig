@@ -3,6 +3,8 @@
 {% block title %}Affchage Tuteurs - {{ parent() }}{% endblock %}
 
 {% block body %}
+    {{ ui.competences(tuteur.competences, competences) }}
+
     {% embed 'partials/_tuteur_card.html.twig' with {tuteur: tuteur} %} 
         {% block actions %} 
             <a class="btn" href="mailto:{{ tuteur.email }}">Contacter</a> 

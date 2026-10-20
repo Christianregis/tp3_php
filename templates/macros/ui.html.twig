@@ -1,3 +1,9 @@
 {% macro badge(texte, variant = 'info') %}
     <span class="badge badge-{{ variant }}">{{ texte }}</span>
 {% endmacro %}
+
+{% macro competences(codes, competences) %}
+    {% for item in codes %}
+        <span class="badge badge-success">{{ competences[item] }}</span>
+    {% endfor %}
+{% endmacro %}

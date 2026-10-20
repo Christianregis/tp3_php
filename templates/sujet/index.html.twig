@@ -1,0 +1,13 @@
+{% import "macros/ui.html.twig" as ui %}
+{% extends "base.html.twig" %}
+{% block title %}Gestion des sujets - {{ parent() }}{% endblock %}
+{% block body %}
+<div>
+    {% for sujet in sujets %}
+        <p>{{ ui.badge(sujet.sujet) }}</p>
+        <p>{{ sujet.nom_etudiant }}</p>
+        <p>{{ sujet.nom_tuteur }}</p>
+        <p>{{ sujet.entreprise }}</p>
+    {% endfor %}
+</div>
+{% endblock %}
