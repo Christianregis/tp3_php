@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+{% block title %}Bonjour - {{ parent() }}{% endblock %}
+{% block body %}
+    {% if nom == 'Inconnu' %}
+         <strong>Personne Inconnue</strong>
+    {% else %}
+        {{ nom|upper }}
+    {% endif %}
+        
+    
+{% endblock %}

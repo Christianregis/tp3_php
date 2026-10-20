@@ -1,0 +1,29 @@
+<style>
+
+</style>
+
+<article class="tuteur-card">
+    <header class="tuteur-card__header">
+        <div aria-hidden="true" class="tuteur-card__avatar"></div>
+        <div class="tuteur-card__identity">
+            <h2 class="tuteur-card__name">{{ tuteur.nom }} {{ tuteur.prenom }}</h2>
+            <p class="tuteur-card__company">{{ tuteur.entreprise }}</p>
+        </div>
+    </header>
+
+    <div class="tuteur-card__details">
+        <p class="tuteur-card__detail">
+            <strong class="tuteur-card__label">Téléphone</strong>
+            {% if tuteur.telephone is not empty %}
+                <a href="tel:{{ tuteur.telephone }}" class="tuteur-card__link">{{ tuteur.telephone }}</a>
+            {% else %}
+                <span class="tuteur-card__empty">Non renseigné</span>
+            {% endif %}
+        </p>
+        <p class="tuteur-card__detail">
+            <strong class="tuteur-card__label">E-mail</strong>
+            <a href="mailto:{{ tuteur.email }}" class="tuteur-card__link tuteur-card__email">{{ tuteur.email }}</a>
+        </p>
+    </div>
+    {% block actions %}{% endblock %}
+</article>

@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+{% import "macros/ui.html.twig" as ui %}
+{% block title %}Affchage Tuteurs - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {% embed 'partials/_tuteur_card.html.twig' with {tuteur: tuteur} %} 
+        {% block actions %} 
+            <a class="btn" href="mailto:{{ tuteur.email }}">Contacter</a> 
+        {% endblock %} 
+    {% endembed %} 
+    <div style="margin: 20px;">
+        <h2>Etudiants encadres</h2>
+        <a href="{{ path('tuteur_index') }}"><i class="fas fa-arrow-left"></i> Retour a la liste</a>
+    </div>
+    <table border="1" style="margin: 20px;">
+        <tr>
+            <th>Nom complet</th>
+            <th>Sujet</th>
+        </tr>
+        {% for etudiant in tuteur.etudiants %}
+            <tr>
+                <td>{{ etudiant.nom }} {{ etudiant.prenom }}</td>
+                <td> {{ ui.badge(etudiant.sujet) }}</td>
+            </tr>
+        {% else %}
+            <p style="margin: 20px;">Aucun etudiants pour ce tuteur</p>
+        {% endfor %}
+    </table>
+{% endblock %}

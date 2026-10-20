@@ -1,0 +1,47 @@
+{% extends "base.html.twig" %}
+{% block title %}Gestionnaire de tuteurs - {{ parent() }}{% endblock %}
+{% block body %}
+    {% set colonnes = ['Nom', 'Prenom', 'Entreprise', 'Email', 'Telephone', 'Nb etudiants'] %}
+    <h1>Les Tuteurs</h1>
+    {% if app.request.query.get('vue') == 'carte' %}
+        {% for tuteur in tuteurs %}
+            {{ include('partials/_tuteur_card.html.twig', {tuteur: tuteur}) }}
+        {% endfor %}
+    {% else %}
+        <table border="1">
+            <tr>
+                {% for col in colonnes %}
+                    <th>
+                        <a
+                            href="{{ path('tuteur_index', app.request.query.all|merge({
+                sort: col|lower,
+                dir: (app.request.query.get('sort') == col and app.request.query.get('dir') == 'asc') ? 'desc' : 'asc'
+                }))}}"
+                        >{{ col|upper }} <i class="fas fa-arrow-{{ app.request.query.get('dir') == 'desc' ? 'down' : 'up' }}"></i></a>
+                    </th>
+                {% endfor %}
+                <th>Actions</th>
+            </tr>
+            {% for tuteur in tuteurs %}
+                <tr>
+
+                    <td>{{ tuteur.nom }}</td>
+                    <td>{{ tuteur.prenom }}</td>
+                    <td>{{ tuteur.entreprise }}</td>
+                    <td>{{ tuteur.email }}</td>
+                    <td>{{ tuteur.telephone == '' ? '-' : tuteur.telephone }}</td>
+                    <td>{{ tuteur.etudiants|length }}</td>
+                    <td><a href="{{ path('tuteur_show', {id: tuteur.id}) }}">Voir</a></td>
+
+                </tr>
+                {% if loop.last %}
+                    <tr><td colspan="7">({{ '%02d'|format(loop.length) }}) Tuteur(s)</td></tr>
+                {% endif %}
+            {% else %}
+                <tr><td colspan="7"><strong>Aucun tuteurs dans la base</strong> (00) Tuteur(s)</td></tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    
+    
+{% endblock %}

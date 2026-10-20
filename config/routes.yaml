@@ -2,4 +2,14 @@ controllers:
     resource:
         path: ../src/Controller/
         namespace: App\Controller
+    
     type: attribute
+
+calcul:
+    path: /calcul/{nombre}
+    controller: App\Controller\MainController::indexter
+    requirements:
+        nombre: '\d+'
+    methods: ['GET']
+
+    
