@@ -71,15 +71,6 @@ class FormController extends AbstractController
         $competences = $request->request->all('competences');
         $langues = $request->request->all('langues');
 
-        $resultCompetences = "";
-        foreach ($competences as $competence) {
-            $resultCompetences .= htmlspecialchars($competence) . ", ";
-        }
-
-        $resultLangues = "";
-        foreach ($langues as $langue) {
-            $resultLangues .= htmlspecialchars($langue) . ", ";
-        }
         $erreurs = [];
         $valeurs = [
             'nom' => $nom,
@@ -139,7 +130,7 @@ class FormController extends AbstractController
     }
 
     #[Route('/search_tuteur', methods: ['GET'])]
-    public function searchTuteur(Request $request): Response
+    public function searchTuteur(): Response
     {
         $caseCompetences = '';
         foreach (self::COMPETENCES as $code => $libelle) {
@@ -158,7 +149,8 @@ class FormController extends AbstractController
                 <meta charset="UTF-8">
                 <title>Recherche de tuteur</title>
             </head>
-            <body>                      
+            <body>
+
                 <h1>Recherche de tuteur</h1>
                 <form action="/search_tuteur" method="post">
                     <label>Nom : <input type="text" name="nom" required></label><br><br>
@@ -169,6 +161,8 @@ class FormController extends AbstractController
                     </select><br>
                     <button type="submit">Rechercher</button>
                 </form>
+            </body>
+        </html>
         HTML;
         return new Response($html);
     }
