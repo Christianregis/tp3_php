@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class FormController
+class FormController extends AbstractController
 {
+    private const FORM_TEMPLATE = 'tuteur/nouveau.html.twig';
+
     private const COMPETENCES = [
         'web' => 'Développement web',
         'java' => 'Java',
@@ -29,99 +32,33 @@ class FormController
     ];
     private const CIVILITES = ['M', 'Mme'];
 
-    private function formulaire(array $valeurs = [], array $erreurs = []): string
+
+
+
+    #[Route('/tuteur/nouveau', methods: ['GET'], name: 'tuteur_nouveau')]
+    public function nouveau()
     {
-        $caseCompetences = '';
-        foreach (self::COMPETENCES as $code => $libelle) {
-            $coche = in_array($code, $valeurs['competences'] ?? [], true) ? 'checked' : '';
-            $caseCompetences .= '<label><input type="checkbox" name="competences[]" value="' . $code . '" ' . $coche . '> ' . $libelle . '</label><br>';
-        }
-        $caseLangues = '';
-        foreach (self::LANGUES as $key => $value) {
-            $selected = in_array($key, $valeurs['langues'] ?? [], true) ? 'selected' : '';
-            $caseLangues .= '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
-        }
 
-        $caseSecteurs = '';
-        foreach (self::SECTEURS as $key => $value) {
-            $selected = ($valeurs['secteur'] ?? null) === $key ? 'selected' : '';
-            $caseSecteurs .= '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
-        }
+        $competences = self::COMPETENCES;
+        $langues = self::LANGUES;
+        $secteurs = self::SECTEURS;
+        $civilites = self::CIVILITES;
 
-        $nomError = htmlspecialchars($erreurs['nom'] ?? '');
-        $prenomError = htmlspecialchars($erreurs['prenom'] ?? '');
-        $emailError = htmlspecialchars($erreurs['email'] ?? '');
-        $civiliteError = htmlspecialchars($erreurs['civilite'] ?? '');
-        $secteurError = htmlspecialchars($erreurs['secteur'] ?? '');
-        $competencesError = htmlspecialchars($erreurs['competences'] ?? '');
-        $languesError = htmlspecialchars($erreurs['langues'] ?? '');
-        $maxStagiairesError = htmlspecialchars($erreurs['maxStagiaires'] ?? '');
-        $commentError = htmlspecialchars($erreurs['comment'] ?? '');
-
-        $html = <<<HTML
-        <!DOCTYPE html>
-        <html lang="fr">
-            <head>
-                <meta charset="UTF-8">
-                <title>Nouveau tuteur</title>
-            </head>
-
-            <body>
-                <h1>Inscription d'un tuteur</h1>
-                <p style="color: red;">$nomError</p>
-                <p style="color: red;">$prenomError</p>
-                <p style="color: red;">$emailError</p>
-                <p style="color: red;">$civiliteError</p>
-                <p style="color: red;">$secteurError</p>
-                <p style="color: red;">$competencesError</p>
-                <p style="color: red;">$languesError</p>
-                <p style="color: red;">$maxStagiairesError</p>
-                <p style="color: red;">$commentError</p>
-
-                <form action="/tuteur/enregistrer" method="post">
-                    <label>Nom : <input type="text" name="nom" required></label><br><br>
-                    <label>Prénom : <input type="text" name="prenom" required></label><br><br>
-                    <label>Email : <input type="email" name="email" required></label><br><br>
-                    <label>Civilite</label>
-                    <input id="civ-m" type="radio" value="M" name="civilite" />
-                    <label for="civ-m">.M</label>
-                    <input id="civ-mme" type="radio" value="Mme" name="civilite" />
-                    <label for="civ-mme">.Mme</label><br><br>
-                    <select name="secteur">
-                        $caseSecteurs
-                    </select><br><br><br>
-                    <label>Competences</label><br>
-                    $caseCompetences
-                    <select name="langues[]" multiple size="5">
-                        $caseLangues
-                    </select><br>
-                    <input type="number" name="maxStagiaires" min="1" max="5"/>
-                    <label for="maxStagiaires">Nombre de stagiaires maximum</label><br>
-                    <input type="date" name="date" />
-                    <label for="date">Date de naissance</label><br> 
-                    <textarea type="text" name="comment" placeholder="Commentaire"></textarea>
-                    <label for="comment">Commentaire</label><br>
-
-                    <button type="submit">Enregistrer</button>
-                </form>
-            </body>
-        </html>
-        HTML;
-        return $html;
+        return $this->render(self::FORM_TEMPLATE, [
+            'erreurs' => [],
+            'valeurs' => [],
+            'success' => null,
+            'competences' => $competences,
+            'langues' => $langues,
+            'secteurs' => $secteurs,
+            'civilites' => $civilites
+        ]);
     }
 
-
-    #[Route('/tuteur/nouveau', methods: ['GET'])]
-    public function nouveau(): Response
+    #[Route('/tuteur/enregistrer', methods: ['POST'], name: 'tuteur_enregistrer')]
+    public function enregistrer(Request $request)
     {
-        $html = $this->formulaire([], []);
-        return new Response($html);
-    }
-
-    #[Route('/tuteur/enregistrer', methods: ['POST'])]
-    public function enregistrer(Request $request): Response
-    {
-        $request = Request::createFromGlobals();
+        // Si je veux récupérer les données du formulaire, je peux utiliser $request->query->get() (En GET) et $request->request->all() (En POST) pour les champs multiples (checkboxes, selects multiples).
 
         $nom = $request->request->get('nom');
         $prenom = $request->request->get('prenom');
@@ -179,63 +116,26 @@ class FormController
                 $erreurs['comment'] = 'Le commentaire est requis.';
             }
 
-            $html = $this->formulaire($valeurs, $erreurs);
-            return new Response($html);
-        }
-        $secteurResult = self::SECTEURS[$secteur] ?? 'Inconnu';
-        $competencesResult = "";
 
-        foreach ($competences as $competence) {
-            $competencesResult .= self::COMPETENCES[$competence] ?? 'Inconnu';
+            return $this->render(self::FORM_TEMPLATE, [
+                'erreurs' => $erreurs,
+                'success' => null,
+                'valeurs' => $valeurs,
+                'competences' => self::COMPETENCES,
+                'langues' => self::LANGUES,
+                'secteurs' => self::SECTEURS,
+                'civilites' => self::CIVILITES
+            ]);
         }
-        $languesResult = "";
-        foreach ($langues as $langue) {
-            $languesResult .= self::LANGUES[$langue] ?? 'Inconnu';
-        }
-        $html = <<<HTML
-                <!DOCTYPE html>
-                <html lang="fr">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Formulaire</title>
-                </head>
-                <body>
-                    <h1>Formulaire Soumis !</h1>
-                    <tbody>
-                    <tr>
-                        <td>Nom :</td>
-                        <td>$nom</td>
-                    </tr>
-                    <tr>
-                        <td>Prenom :</td>
-                        <td>$prenom</td>
-                    </tr>
-                    <tr>
-                        <td>Email :</td>
-                        <td>$email</td>
-                    </tr>
-                    <tr>
-                        <td>Civilite :</td>
-                        <td>$civilite</td>
-                    </tr>
-                    <tr>
-                        <td>Competences :</td>
-                        <td>$competencesResult</td>
-                    </tr>
-                    <tr>
-                        <td>Langues :</td>
-                        <td>$languesResult</td>
-                    </tr>
-                    <tr>
-                        <td>Secteur :</td>
-                        <td>$secteurResult</td>
-                    </tr>
-                    </tbody>
-
-                </body>
-                </html>
-                HTML;
-        return new Response($html);
+        return $this->render(self::FORM_TEMPLATE, [
+            'success' => 'Tuteur enregistré avec succès !',
+            'valeurs' => $valeurs,
+            'erreurs' => [],
+            'competences' => self::COMPETENCES,
+            'langues' => self::LANGUES,
+            'secteurs' => self::SECTEURS,
+            'civilites' => self::CIVILITES
+        ]);
     }
 
     #[Route('/search_tuteur', methods: ['GET'])]

@@ -2,12 +2,24 @@
 {% extends "base.html.twig" %}
 {% block title %}Gestion des sujets - {{ parent() }}{% endblock %}
 {% block body %}
-<div>
-    {% for sujet in sujets %}
-        <p>{{ ui.badge(sujet.sujet) }}</p>
-        <p>{{ sujet.nom_etudiant }}</p>
-        <p>{{ sujet.nom_tuteur }}</p>
-        <p>{{ sujet.entreprise }}</p>
-    {% endfor %}
-</div>
+    <form action="{{ path('sujet_index') }}" method="get">
+        <label for="entreprise">Filtrer par entreprise :</label>
+        <select name="entreprise" id="entreprise">
+            <option value="">Choisir une entreprise</option>
+            {% for entreprise in entreprises %}
+                <option value="{{ entreprise }}">{{ entreprise }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filtrer</button>
+    </form>
+    {%  set count = sujets|length %}
+    <div>
+        {{ count }} Sujet{{ count > 1 ? 's' : '' }} trouvé{{ count > 1 ? 's' : '' }}.
+        {% for sujet in sujets|sort((a, b) => a.sujet <=> b.sujet) %}
+            <p>Sujet: {{ ui.badge(sujet.sujet) }}</p>
+            <p>Étudiant: {{ sujet.nom_etudiant }}</p>
+            <p>Tuteur: {{ sujet.nom_tuteur }}</p>
+            <p>Entreprise: {{ sujet.entreprise }}</p>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Service\TuteurProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class SujetController extends AbstractController
 {
-    #[Route('/sujets', name: 'sujet_index')]
-    public function index(TuteurProvider $tuteurProvider)
+    #[Route('/sujets', name: 'sujet_index', methods: ['GET'])]
+    public function index(TuteurProvider $tuteurProvider, Request $request)
     {
         $sujets = [];
         $tuteurs = $tuteurProvider->findAll();
+
+        $entreprise = $request->query->get('entreprise');
         foreach ($tuteurs as $tuteur) {
             foreach ($tuteur['etudiants'] as $etudiant) {
                 $sujet = [
@@ -22,12 +25,22 @@ class SujetController extends AbstractController
                     'sujet' => $etudiant['sujet'],
                     'entreprise' => $tuteur['entreprise'],
                 ];
-                $sujets = [...$sujets, $sujet];
+                if (($entreprise != null && $tuteur['entreprise'] === $entreprise) || $entreprise == '') {
+                    $sujets = [...$sujets, $sujet];
+                }
             }
         }
+        $entreprises = [];
+
+        foreach ($tuteurs as $tuteur) {
+            $entreprises = [...$entreprises, $tuteur['entreprise']];
+        }
+
+        $entreprises = array_unique($entreprises);
 
         return $this->render('sujet/index.html.twig', [
             'sujets' => $sujets,
+            'entreprises' => $entreprises,
         ]);
     }
 }

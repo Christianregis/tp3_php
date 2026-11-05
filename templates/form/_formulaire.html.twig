@@ -1,0 +1,50 @@
+<form action="{{ path('tuteur_enregistrer') }}" method="post" class="form">
+    <label>Nom : <input type="text" name="nom" value="{{ valeurs.nom|default('') }}" required></label>
+    <label>Prénom : <input type="text" name="prenom" value="{{ valeurs.prenom|default('') }}" required></label>
+    <label>Email : <input type="email" name="email" value="{{ valeurs.email|default('') }}" required></label>
+    <fieldset>
+        <legend>Civilité</legend>
+        <input id="civ-m" type="radio" value="M" name="civilite"/>
+        <label for="civ-m">M</label>
+        <input id="civ-mme" type="radio" value="Mme" name="civilite"/>
+        <label for="civ-mme">Mme</label>
+    </fieldset><br>
+    <label for="secteur">Secteur</label>
+    <select id="secteur" name="secteur">
+        {% for code, libelle in secteurs %}
+            <option value="{{ code }}">{{ libelle|upper }}</option>
+        {% endfor %}
+    </select>
+        
+    <fieldset>
+        <legend>Compétences</legend>
+        {% for code, libelle in competences %}
+            <label>
+                <input
+                    type="checkbox"
+                    name="competences[]"
+                    value="{{ code }}"
+                    {{ code in valeurs.competences|default([]) ? 'checked' }}
+                >
+                {{ libelle }}
+            </label>
+        {% endfor %}
+    </fieldset>
+    <label for="langues">Langues</label>
+    <select id="langues" name="langues[]" multiple>
+        {% for code, libelle in langues %}
+            <option value="{{ code }}" {{ code in valeurs.langues|default([]) ? 'selected' }}>{{ libelle }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="maxStagiaires">Nombre de stagiaires maximum</label>
+    <input id="maxStagiaires" type="number" name="maxStagiaires" min="1" max="5"/>
+
+    <label for="date">Date de naissance</label>
+    <input id="date" type="date" name="date"/>
+
+    <label for="comment">Commentaire</label>
+    <textarea id="comment" name="comment" placeholder="Commentaire"></textarea>
+
+    <button type="submit">Enregistrer</button>
+</form>

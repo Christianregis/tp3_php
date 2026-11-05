@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+{% block title %}Nouveau Tuteur{% endblock %}
+{% block body %}
+    {% if success %}
+        <div class="alert-success">
+            {{ success }}
+        </div>
+    {% endif %}
+    {% if erreurs %}
+        <div class="alert-danger">
+            <ul>
+                {% for erreur in erreurs %}
+                    <li>{{ erreur }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <h1>Nouveau Tuteur</h1>
+    {% include 'form/_formulaire.html.twig' %}
+{% endblock %}
