@@ -1,11 +1,11 @@
 {% extends "base.html.twig" %}
 {% block title %}Nouveau Tuteur{% endblock %}
 {% block body %}
-    {% if success %}
+    {% for message in app.flashes('success') %}
         <div class="alert-success">
-            {{ success }}
+            {{ message }}
         </div>
-    {% endif %}
+    {% endfor %}
     {% if erreurs %}
         <div class="alert-danger">
             <ul>

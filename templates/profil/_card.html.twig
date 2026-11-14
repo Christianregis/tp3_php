@@ -1,0 +1,100 @@
+<style>
+	.profil-card {
+		max-width: 360px;
+		padding: 24px;
+		border: 1px solid #e8eaf0;
+		border-radius: 16px;
+		background: #fff;
+		box-shadow: 0 8px 24px rgba(31, 41, 55, .08);
+		font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+		color: #202638;
+	}
+
+	.profil-card__header {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		margin-bottom: 20px;
+	}
+
+	.profil-card__avatar {
+		display: grid;
+		width: 52px;
+		height: 52px;
+		place-items: center;
+		border-radius: 50%;
+		background: #eef0ff;
+		color: #5558c9;
+		font-size: 1.2rem;
+		font-weight: 700;
+	}
+
+	.profil-card__title {
+		margin: 0;
+		font-size: 1.2rem;
+	}
+
+	.profil-card__subtitle {
+		margin: 4px 0 0;
+		color: #737b8c;
+		font-size: .9rem;
+	}
+
+	.profil-card__details {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 0 20px;
+		padding: 14px 0;
+		border-top: 1px solid #eef0f4;
+		border-bottom: 1px solid #eef0f4;
+	}
+
+	.profil-card__label {
+		display: block;
+		margin-bottom: 5px;
+		color: #737b8c;
+		font-size: .8rem;
+	}
+
+	.profil-card__value {
+		font-weight: 600;
+	}
+
+	.profil-card__link {
+		display: inline-block;
+		padding: 9px 16px;
+		border-radius: 8px;
+		background: #1e293b;
+		color: #fff;
+		font-weight: 600;
+		text-decoration: none;
+		transition: background .2s ease;
+	}
+
+	.profil-card__link:hover {
+		background: #4144ad;
+	}
+</style>
+
+<article class="profil-card">
+	<header class="profil-card__header">
+		<div class="profil-card__avatar" aria-hidden="true">{{ profil.getPseudo()|slice(0, 2)|upper }}</div>
+		<div>
+			<h2 class="profil-card__title">{{ profil.getPseudo() }}</h2>
+			<p class="profil-card__subtitle">Profil membre</p>
+		</div>
+	</header>
+
+	<div class="profil-card__details">
+		<div>
+			<span class="profil-card__label">Ville</span>
+			<span class="profil-card__value">{{ profil.getVille() }}</span>
+		</div>
+		<div>
+			<span class="profil-card__label">Âge</span>
+			<span class="profil-card__value">{{ profil.getAge() }} ans</span>
+		</div>
+	</div>
+
+	<a class="profil-card__link" href="#">Voir</a>
+</article>

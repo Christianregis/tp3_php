@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil - {{ profil.getPseudo }} - {{ parent() }} {% endblock %}
+
+{% block body %}
+
+    {{ include('/profil/_card.html.twig', {profil: profil}) }}
+{% endblock %}

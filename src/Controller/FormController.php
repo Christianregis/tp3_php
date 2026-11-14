@@ -47,7 +47,6 @@ class FormController extends AbstractController
         return $this->render(self::FORM_TEMPLATE, [
             'erreurs' => [],
             'valeurs' => [],
-            'success' => null,
             'competences' => $competences,
             'langues' => $langues,
             'secteurs' => $secteurs,
@@ -110,7 +109,6 @@ class FormController extends AbstractController
 
             return $this->render(self::FORM_TEMPLATE, [
                 'erreurs' => $erreurs,
-                'success' => null,
                 'valeurs' => $valeurs,
                 'competences' => self::COMPETENCES,
                 'langues' => self::LANGUES,
@@ -118,8 +116,9 @@ class FormController extends AbstractController
                 'civilites' => self::CIVILITES
             ]);
         }
+        $this->addFlash('success', "Tuteur $nom $prenom enregistré avec succès !");
+
         return $this->render(self::FORM_TEMPLATE, [
-            'success' => 'Tuteur enregistré avec succès !',
             'valeurs' => $valeurs,
             'erreurs' => [],
             'competences' => self::COMPETENCES,
