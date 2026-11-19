@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Profil;
 use App\Repository\ProfilRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class ProfilController extends AbstractController
@@ -29,5 +32,24 @@ final class ProfilController extends AbstractController
                 'profil' => $profil,
             ]);
         }
+    }
+
+    #[Route('/profils/nouveau', methods: ['GET', 'POST'], name: 'profil_nouveau')]
+    public function nouveau(Request $request, ProfilRepository $repo, EntityManagerInterface $em)
+    {
+        $pseudo = $request->get('pseudo');
+        $ville = $request->get('ville');
+        $dateInscription = $request->get('dateInscription');
+
+        if ($pseudo != null && $ville != null && $dateInscription != null) {
+            $profil = new Profil();
+            $profil->setPseudo($pseudo);
+            $profil->setVille($ville);
+            $profil->setDateInscription($dateInscription);
+            $profil->setActif(true);
+
+            $em->persist($profil);
+        }
+        $em->flush();
     }
 }

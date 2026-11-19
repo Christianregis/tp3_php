@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block title %}Profil – Affinités{% endblock %}
+{% block body %}
+    <h1>{{ titre }}</h1>
+    {% for erreur in erreurs %}<p>{{ erreur }}</p>{% endfor %}
+    <form method="post" action="{{ path(action, parametres) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token(token_id) }}">
+        <label>Pseudo
+            <input
+                name="pseudo"
+                maxlength="50"
+                required
+                value="{{ valeurs.pseudo|default('') }}"
+            >
+        </label>
+        <br>
+        <label>Date de naissance
+            <input
+                type="date"
+                name="dateNaissance"
+                required
+                value="{{ valeurs.dateNaissance|default('') }}"
+            >
+        </label><br>
+        <label>Ville
+            <input
+                name="ville"
+                maxlength="100"
+                required
+                value="{{ valeurs.ville|default('') }}"
+            >
+        </label><br>
+        <label>Présentation
+            <textarea name="description" required
+ >{{ valeurs.description|default('') }}</textarea>
+        </label><br> <button type="submit">Enregistrer</button>
+    </form>
+    <a href="{{ path('profil_index') }}">Retour à la liste</a>
+{% endblock %}
